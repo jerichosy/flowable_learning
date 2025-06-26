@@ -5,6 +5,7 @@ import org.flowable.engine.impl.cfg.StandaloneProcessEngineConfiguration;
 import org.flowable.engine.repository.Deployment;
 import org.flowable.engine.repository.ProcessDefinition;
 import org.flowable.engine.runtime.ProcessInstance;
+import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.task.api.Task;
 
 import java.util.HashMap;
@@ -75,6 +76,21 @@ public class HolidayRequest {
         variables = new HashMap<String, Object>();
         variables.put("approved", approved);
         taskService.complete(task.getId(), variables);
+
+
+        // -- AUDIT TRAIL --
+        HistoryService historyService = processEngine.getHistoryService();
+        List<HistoricActivityInstance> activities =
+                historyService.createHistoricActivityInstanceQuery()
+                        .processInstanceId(processInstance.getId())
+                        .finished()
+                        .orderByHistoricActivityInstanceEndTime().asc()
+                        .list();
+
+        for (HistoricActivityInstance activity : activities) {
+            System.out.println(activity.getActivityId() + " took "
+                    + activity.getDurationInMillis() + " milliseconds");
+        }
     }
 
 }
