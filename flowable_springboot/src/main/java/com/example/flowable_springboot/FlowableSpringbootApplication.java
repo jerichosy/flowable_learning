@@ -18,17 +18,19 @@ public class FlowableSpringbootApplication {
     @Bean
     public CommandLineRunner init(final RepositoryService repositoryService,
                                   final RuntimeService runtimeService,
-                                  final TaskService taskService) {
+                                  final TaskService taskService,
+                                  final MyService myService) {
 
         return new CommandLineRunner() {
             @Override
             public void run(String... strings) throws Exception {
-                System.out.println("Number of process definitions : "
-                    + repositoryService.createProcessDefinitionQuery().count());
-                System.out.println("Number of tasks : " + taskService.createTaskQuery().count());
-                runtimeService.startProcessInstanceByKey("oneTaskProcess");
-                System.out.println("Number of tasks after process start: "
-                    + taskService.createTaskQuery().count());
+//                System.out.println("Number of process definitions : "
+//                    + repositoryService.createProcessDefinitionQuery().count());
+//                System.out.println("Number of tasks : " + taskService.createTaskQuery().count());
+//                runtimeService.startProcessInstanceByKey("oneTaskProcess");
+//                System.out.println("Number of tasks after process start: "
+//                    + taskService.createTaskQuery().count());
+                myService.createDemoUsers();
             }
         };
     }
